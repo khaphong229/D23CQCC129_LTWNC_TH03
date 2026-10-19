@@ -45,12 +45,6 @@ export const AssignmentDetailScreen: React.FC<Props> = ({
           </Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonText}>Quay lại</Text>
-      </TouchableOpacity>
     </View>
   );
 };

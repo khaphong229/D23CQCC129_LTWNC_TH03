@@ -17,12 +17,6 @@ export const GradeDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         <Text style={styles.info}>Điểm cuối kỳ: {grade.finalScore}</Text>
         <Text style={styles.info}>Điểm tổng kết: {grade.totalScore}</Text>
       </View>
-
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>Quay lại</Text>
-      </TouchableOpacity>
     </View>
   );
 };

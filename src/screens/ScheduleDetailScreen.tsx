@@ -19,12 +19,6 @@ export const ScheduleDetailScreen: React.FC<Props> = ({
         <Text style={styles.info}>Thời gian: {schedule.time}</Text>
         <Text style={styles.info}>Phòng học: {schedule.room}</Text>
       </View>
-
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>Quay lại</Text>
-      </TouchableOpacity>
     </View>
   );
 };

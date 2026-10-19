@@ -17,12 +17,6 @@ export const CourseDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         <Text style={styles.info}>Giảng viên: {course.instructor}</Text>
         <Text style={styles.info}>Mô tả: {course.description}</Text>
       </View>
-
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>Quay lại</Text>
-      </TouchableOpacity>
     </View>
   );
 };
