@@ -161,8 +161,8 @@
       "title": "Thực hành 4: API & Offline",
       "description": "Kết nối API và hỗ trợ chế độ offline.",
       "dueDate": "2026-11-06T23:59:00Z",
-      "status": "todo",
-      "updatedAt": "2026-10-26T08:00:00Z"
+      "status": "done",
+      "updatedAt": "2026-11-02T08:44:53.184Z"
     },
     {
       "id": 2,
@@ -170,8 +170,8 @@
       "title": "Thiết kế sơ đồ ERD Quản lý Thư viện",
       "description": "Vẽ sơ đồ thực thể liên kết và chuyển sang lược đồ quan hệ.",
       "dueDate": "2026-11-08T23:59:00Z",
-      "status": "todo",
-      "updatedAt": "2026-10-26T09:00:00Z"
+      "status": "done",
+      "updatedAt": "2026-11-02T08:44:54.856Z"
     },
     {
       "id": 3,
@@ -180,7 +180,7 @@
       "description": "Viết các hàm thêm, xóa, duyệt cây nhị phân tìm kiếm.",
       "dueDate": "2026-10-25T23:59:00Z",
       "status": "done",
-      "updatedAt": "2026-10-24T15:00:00Z"
+      "updatedAt": "2026-11-02T08:36:30.189Z"
     },
     {
       "id": 4,
@@ -188,8 +188,8 @@
       "title": "Báo cáo thực hành chia Subnet",
       "description": "Chia địa chỉ IP cho các phòng ban trong doanh nghiệp.",
       "dueDate": "2026-10-28T23:59:00Z",
-      "status": "todo",
-      "updatedAt": "2026-10-25T10:00:00Z"
+      "status": "done",
+      "updatedAt": "2026-11-02T08:44:52.508Z"
     },
     {
       "id": 5,
@@ -197,8 +197,8 @@
       "title": "Xây dựng giao diện trang chủ",
       "description": "Cắt giao diện HTML/CSS và gọi thử dữ liệu từ json-server.",
       "dueDate": "2026-11-15T23:59:00Z",
-      "status": "todo",
-      "updatedAt": "2026-10-27T14:00:00Z"
+      "status": "done",
+      "updatedAt": "2026-11-02T08:44:55.712Z"
     }
   ],
   "grades": [
@@ -218,7 +218,7 @@
       "semester": "HK1 2026-2027",
       "attendance": 9,
       "midterm": 8.5,
-      "final": 9.0,
+      "final": 9,
       "total": 8.85,
       "letter": "A"
     },
@@ -227,7 +227,7 @@
       "courseId": 3,
       "semester": "HK1 2026-2027",
       "attendance": 8,
-      "midterm": 7.0,
+      "midterm": 7,
       "final": 7.5,
       "total": 7.4,
       "letter": "B"
@@ -248,10 +248,9 @@
       "semester": "HK2 2026-2027",
       "attendance": 7,
       "midterm": 5.5,
-      "final": 6.0,
+      "final": 6,
       "total": 5.95,
       "letter": "C"
     }
   ]
 }
-

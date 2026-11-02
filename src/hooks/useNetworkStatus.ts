@@ -6,17 +6,11 @@ export function useNetworkStatus(): { isOnline: boolean } {
 
   useEffect(() => {
     NetInfo.fetch().then(state => {
-      const ok = Boolean(
-        state.isConnected && state.isInternetReachable !== false,
-      );
-      setIsOnline(ok);
+      setIsOnline(Boolean(state.isConnected));
     });
 
     const unsub = NetInfo.addEventListener(state => {
-      const ok = Boolean(
-        state.isConnected && state.isInternetReachable !== false,
-      );
-      setIsOnline(ok);
+      setIsOnline(Boolean(state.isConnected));
     });
 
     return () => {
@@ -28,4 +22,3 @@ export function useNetworkStatus(): { isOnline: boolean } {
 }
 
 export default useNetworkStatus;
-
