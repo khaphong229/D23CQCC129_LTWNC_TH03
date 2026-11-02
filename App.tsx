@@ -1,18 +1,20 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StudyProvider } from './src/context/StudyContext';
-import { AppNavigator } from './src/navigation/AppNavigator';
+import { SyncProvider } from './src/context/SyncContext';
+import { AppDataProvider } from './src/context/AppDataContext';
+import AppNavigator from './src/navigation/AppNavigator';
 
-function App() {
+export default function App() {
   return (
     <SafeAreaProvider>
-      <StudyProvider>
-        <StatusBar barStyle="dark-content" />
-        <AppNavigator />
-      </StudyProvider>
+      <SyncProvider>
+        <AppDataProvider>
+          <StatusBar barStyle="dark-content" />
+          <AppNavigator />
+        </AppDataProvider>
+      </SyncProvider>
     </SafeAreaProvider>
   );
 }
 
-export default App;
