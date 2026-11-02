@@ -1,62 +1,65 @@
-export interface StudentProfile {
-  studentId: string;
+export interface Student {
+  id: number;
+  studentCode: string;
   fullName: string;
   className: string;
   major: string;
   email: string;
   phone: string;
+  updatedAt?: string;
 }
 
 export interface Course {
-  id: string;
+  id: number;
   code: string;
   name: string;
   credits: number;
-  instructor: string;
+  lecturer: string;
   description: string;
+  semester: string;
 }
 
-export interface ScheduleItem {
-  id: string;
-  courseId: string;
-  courseName: string;
-  day: string;
-  time: string;
+export interface SessionItem {
+  id: number;
+  courseId: number;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
   room: string;
+  note?: string;
+  course?: Course | null;
 }
 
 export interface Assignment {
-  id: string;
-  courseId: string;
-  courseName: string;
+  id: number | string;
+  courseId: number;
   title: string;
-  dueDate: string;
-  completed: boolean;
   description: string;
+  dueDate: string;
+  status: 'todo' | 'done';
+  updatedAt?: string;
+  course?: Course | null;
 }
 
 export interface GradeRecord {
-  id: string;
-  courseId: string;
-  courseName: string;
-  credits: number;
-  midtermScore: number;
-  finalScore: number;
-  totalScore: number;
+  id: number;
+  courseId: number;
+  semester: string;
+  attendance: number;
+  midterm: number;
+  final: number;
+  total: number;
+  letter: string;
+  course?: Course | null;
 }
 
-export type MainTabParamList = {
-  Home: undefined;
-  Courses: undefined;
-  Schedule: undefined;
-  Assignments: undefined;
-  Profile: undefined;
-};
+export interface OutboxAction {
+  id: string;
+  method: 'POST' | 'PATCH';
+  url: string;
+  body: any;
+  createdAt: string;
+  targetType?: string;
+  targetId?: number | string | null;
+}
 
-export type RootStackParamList = {
-  MainTabs: undefined;
-  CourseDetail: { course: Course };
-  ScheduleDetail: { schedule: ScheduleItem };
-  AssignmentDetail: { assignmentId: string };
-  GradeDetail: { grade: GradeRecord };
-};
