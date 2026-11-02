@@ -1,97 +1,85 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Ứng dụng Quản lý Học tập - Thực hành 4 (API & Offline Mode)
 
-# Getting Started
+Ứng dụng Quản lý Học tập cá nhân trên thiết bị di động sử dụng React Native + TypeScript, kết nối REST API (json-server) và hỗ trợ chế độ hoạt động không có mạng (Offline Cache & Outbox Sync).
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 1. Công nghệ sử dụng
 
-## Step 1: Start Metro
+- React Native (TypeScript) & React Navigation (@react-navigation/native, @react-navigation/bottom-tabs, @react-navigation/native-stack)
+- @react-native-async-storage/async-storage (Lưu trữ Cache và Hàng đợi Outbox)
+- @react-native-community/netinfo (Theo dõi trạng thái kết nối mạng)
+- json-server (Mock REST API từ file db.json)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 2. Hướng dẫn cài đặt và chạy ứng dụng
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Bước 1: Cài đặt thư viện
+`ash
+npm install
+`
 
-```sh
-# Using npm
+### Bước 2: Chạy Mock Server (json-server)
+Mở một cửa sổ terminal tại thư mục gốc của dự án và chạy:
+`ash
+npm run api
+`
+Hoặc chạy trực tiếp bằng lệnh:
+`ash
+npx json-server --watch db.json --host 0.0.0.0 --port 3000 --delay 800
+`
+- Máy ảo Android kết nối qua địa chỉ mặc định trong src/config.ts: http://10.0.2.2:3000
+- Nếu dùng máy thật cùng mạng Wi-Fi, đổi BASE_URL trong src/config.ts thành http://<IP-LAN-máy-tính>:3000
+
+### Bước 3: Chạy ứng dụng React Native
+Mở cửa sổ terminal thứ hai và chạy:
+`ash
 npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+`
+Sau đó mở terminal thứ ba để chạy trên máy ảo Android:
+`ash
 npm run android
+`
 
-# OR using Yarn
-yarn android
-```
+## 3. Sơ đồ luồng dữ liệu
 
-### iOS
+`	ext
++-------------------------------------------------------------------+
+|                             MÀN HÌNH                              |
+|    (Home, Courses, Schedule, Assignments, Profile & Details)      |
++-------------------------------------------------------------------+
+                                 |
+                                 v
++-------------------------------------------------------------------+
+|                        CONTEXT & CUSTOM HOOKS                     |
+|   AppDataContext / SyncContext                                    |
+|   useCachedQuery() | useNetworkStatus() | useOutboxSync()         |
++-------------------------------------------------------------------+
+               |                                   |
+      (Đọc/Ghi Cache & Outbox)              (Khi Online gọi)
+               v                                   v
++------------------------------+     +------------------------------+
+|       STORAGE LAYER          |     |         SERVICE LAYER        |
+|  src/storage/cache.ts        |     |  studentService, course...   |
+|  src/storage/outbox.ts       |     |  src/api/client.ts           |
+|  (AsyncStorage)              |     |  (fetch + timeout 10s)       |
++------------------------------+     +------------------------------+
+                                                   |
+                                                   v
+                                     +------------------------------+
+                                     |      REST API (db.json)      |
+                                     |   json-server (port 3000)    |
+                                     +------------------------------+
+`
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+- **Khi đọc dữ liệu (GET):** Màn hình -> AppDataContext / useCachedQuery -> đọc cache.ts hiển thị ngay lập tức -> nếu isOnline = true thì gọi *Service.ts -> client.ts -> API -> lưu kết quả mới kèm savedAt vào cache.ts.
+- **Khi thêm/sửa dữ liệu lúc Offline (POST/PATCH):** Màn hình -> AppDataContext cập nhật ngay giao diện và cache.ts -> đẩy thao tác { id, method, url, body, createdAt } vào outbox.ts -> hiện nhãn "Chưa đồng bộ".
+- **Khi có mạng trở lại:** useNetworkStatus phát hiện isOnline = true -> useOutboxSync đọc tuần tự từng mục trong outbox.ts -> gửi lên API qua client.ts -> xóa mục thành công khỏi outbox.ts -> làm mới dữ liệu và báo "Đã đồng bộ X thay đổi".
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+## 4. Giải thích cách xử lý xung đột dữ liệu (Mục B5)
 
-```sh
-bundle install
-```
+Khi người dùng thực hiện chỉnh sửa dữ liệu lúc đang **offline** (ví dụ: sửa thông tin cá nhân PATCH /students/1 hoặc đổi trạng thái bài tập PATCH /assignments/:id), ứng dụng lưu thời điểm tạo thao tác vào trường createdAt của phần tử trong hàng đợi outbox.
 
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Khi có mạng trở lại, trước khi gửi lệnh PATCH lên server trong src/hooks/useOutboxSync.ts:
+1. Ứng dụng gửi một yêu cầu GET tới chính đường dẫn tài nguyên đó (ví dụ /students/1) để lấy bản ghi hiện tại trên server.
+2. So sánh mốc thời gian serverItem.updatedAt (trên server) với item.createdAt (thời điểm người dùng thao tác offline trên máy):
+   - **Nếu 
+ew Date(serverItem.updatedAt) > new Date(item.createdAt):** Dữ liệu trên server đã được cập nhật mới hơn thời điểm thao tác offline. Ứng dụng **ưu tiên giữ dữ liệu của server**, bỏ qua lệnh PATCH cũ trong hàng đợi, xóa thao tác đó khỏi outbox, tải lại dữ liệu mới từ server về cache và hiển thị hộp thoại Alert thông báo cho người dùng biết có xung đột dữ liệu.
+   - **Nếu serverItem.updatedAt <= item.createdAt:** Không có xung đột, ứng dụng thực hiện PATCH dữ liệu offline lên server như bình thường.
